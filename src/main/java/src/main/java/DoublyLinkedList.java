@@ -7,47 +7,68 @@ import java.util.ListIterator;
 
 public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cloneable {
     private int size;
-    Node<T> first;
-    Node<T> last;
 
     public DoublyLinkedList() {
     }
 
-    @Override
-    public ListIterator<T> listIterator(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        return listIterator();
-    }
 
+    @Override
+    public ListIterator<T> listIterator(int i) {
+        return new ListIterator<T>() {
+            @Override
+            public boolean hasNext() {
+                return size != i;
+            }
+
+            @Override
+            public T next() {
+                return null;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return i <= 1;
+            }
+
+            @Override
+            public T previous() {
+                return null;
+            }
+
+            @Override
+            public int nextIndex() {
+                return 0;
+            }
+
+            @Override
+            public int previousIndex() {
+                return 0;
+            }
+
+            @Override
+            public void remove() {
+
+            }
+
+            @Override
+            public void set(T t) {
+
+            }
+
+            @Override
+            public void add(T t) {
+
+            }
+        };
+    }
 
     @Override
     public int size() {
         return size;
     }
 
-    /**
-     * Класс узла списка.
-     *
-     * @param <T> тип элемента списка.
-     */
-    private static class Node<T> {
-        T data;
-        Node<T> prev;
-        Node<T> next;
-
-    /**
-     * Конструктор узла списка.
-     *
-     * @param data элемент.
-     * @param prev предыдущий.
-     * @param next селдующий.
-     */
-    Node(T data, Node<T> prev, Node<T> next) {
-        this.data = data;
-        this.prev = prev;
-        this.next = next;
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
-}
 }

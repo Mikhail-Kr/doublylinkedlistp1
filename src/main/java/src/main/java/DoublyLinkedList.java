@@ -4,9 +4,12 @@ import org.w3c.dom.Node;
 
 import java.util.AbstractSequentialList;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cloneable {
-    private int size;
+    private int size = 0;
+    private transient Node<T> first;
+    private transient Node<T> last;
 
     public DoublyLinkedList() {
     }
@@ -15,25 +18,36 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
     @Override
     public ListIterator<T> listIterator(int i) {
         return new ListIterator<T>() {
+
             @Override
             public boolean hasNext() {
-                return size != i;
+                return size > i;
             }
 
             @Override
             public T next() {
-                return null;
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                } else {
+                    return (T) null;
+                }
             }
+
 
             @Override
             public boolean hasPrevious() {
-                return i <= 1;
+                return i > 1;
             }
 
             @Override
             public T previous() {
-                return null;
+                if (!hasPrevious()) {
+                    throw new NoSuchElementException();
+                } else {
+                    return null;
+                }
             }
+
 
             @Override
             public int nextIndex() {
@@ -56,10 +70,29 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
             }
 
             @Override
-            public void add(T t) {
-
+            public void add(T element) {
+                if (i < 0 && i > size) {
+                    throw new ArrayIndexOutOfBoundsException();
+                } else if (size == 0) {
+                    Node newNode = new Node(null, element, null);
+                    first = newNode;
+                    last = newNode;
+                    size++;
+                }
             }
         };
+    }
+
+    public static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     @Override

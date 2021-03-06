@@ -1,7 +1,5 @@
 package src.main.java;
 
-import org.w3c.dom.Node;
-
 import java.util.AbstractSequentialList;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -14,10 +12,27 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
     public DoublyLinkedList() {
     }
 
+    public String toString(DoublyLinkedList<T> coll) {
+        Node<T> current = first;
+        String list = "";
+        while (current != null) {
+            list += current.item  + ",";
+            current = current.next;
+        }
+        return list;
+    }
+
+    public String toString(int index) {
+        Node newNode = first;
+        for (int j = 0; j < index; j++) {
+            newNode = first.next;
+        }
+        return newNode.item.toString();
+    }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        return new ListIterator<T>() {
+        return new ListIterator<>() {
 
             @Override
             public boolean hasNext() {
@@ -29,7 +44,11 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 } else {
-                    return (T) null;
+                    Node newNode = first;
+                    for (int j = 0; j < (i + 1); j++) {
+                        newNode = newNode.next;
+                    }
+                    return (T) newNode;
                 }
             }
 
@@ -44,7 +63,11 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
                 if (!hasPrevious()) {
                     throw new NoSuchElementException();
                 } else {
-                    return null;
+                    Node newNode = first;
+                    for (int j = 0; j < (i - 1); j++) {
+                        newNode = newNode.next;
+                }
+                    return (T) newNode;
                 }
             }
 
@@ -65,20 +88,45 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
             }
 
             @Override
-            public void set(T t) {
-
+            public void set(T element) {
+                Node newNode = first;
+                for (int j = 0; j < i; j++) {
+                    newNode = newNode.next;
+                }
+                newNode.item = element;
+                int a = 0;
             }
 
             @Override
             public void add(T element) {
                 if (i < 0 && i > size) {
                     throw new ArrayIndexOutOfBoundsException();
-                } else if (size == 0) {
-                    Node newNode = new Node(null, element, null);
+                } else if (first == null) {
+                    Node newNode = new Node(element);
                     first = newNode;
                     last = newNode;
-                    size++;
+                } else  if (i > 0 && i < size) {
+                    Node newNode = new Node(element);
+                    Node x = first;
+                    for (int j = 0; j < i; j++) {
+                        x = x.next;
+                    }
+                    newNode.next = x.next;
+                    newNode.prev = x.prev;
+                    x.next = newNode;
+                } else if (last.next == null && size != 1) {
+                    Node newNode = new Node(element);
+                    last.prev = last;
+                    newNode.prev = last;
+                    last = newNode;
+                    newNode.prev.next = newNode;
+                } else if (size == 1) {
+                    Node newNode = new Node(element);
+                    first.next = newNode;
+                    newNode.prev = first;
+                    last = newNode;
                 }
+                size++;
             }
         };
     }
@@ -88,10 +136,10 @@ public class DoublyLinkedList<T> extends AbstractSequentialList<T> implements Cl
         Node<T> next;
         Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
+        Node(T item) {
+            this.item = item;
+            Node next;
+            Node prev;
         }
     }
 
